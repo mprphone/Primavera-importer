@@ -45,7 +45,7 @@ function App() {
   const [modelId, setModelId] = useState(BuiltInModels[0].id)
   const model = useMemo(() => BuiltInModels.find(m => m.id === modelId)!, [modelId])
 
-  const [ano, setAno] = useState(2025)
+  const [ano, setAno] = useState(() => new Date().getFullYear())
   const [diario, setDiario] = useState('32')
   const [documento, setDocumento] = useState('321')
   const [startNumDiario, setStartNumDiario] = useState(120001)

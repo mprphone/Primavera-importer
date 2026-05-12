@@ -19,7 +19,9 @@ export const Templates = {
       "descLen": 61,
       "amountEnd": 126,
       "amountFieldLen": 15,
-      "dcPos": 127
+      "dcPos": 127,
+      "yearStart": 221,
+      "yearLen": 4
     }
   }
 } as const;

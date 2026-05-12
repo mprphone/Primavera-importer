@@ -45,11 +45,15 @@ function makeNumDoc(numDiario: number, documento: string): string {
   return nd + doc
 }
 
-function toIsoDate(d: Date): string {
-  const yyyy = String(d.getFullYear())
+function toPostingIsoDate(d: Date, ano: number): string {
+  const yyyy = toYearString(ano)
   const mm = String(d.getMonth() + 1).padStart(2, '0')
   const dd = String(d.getDate()).padStart(2, '0')
   return `${yyyy}-${mm}-${dd}`
+}
+
+function toYearString(ano: number): string {
+  return String(ano).padStart(4, '0').slice(-4)
 }
 
 function buildPostingLines(model: PostingModel, row: InputRow, opts: GenerateOptions, rowIndex: number) {
@@ -58,6 +62,7 @@ function buildPostingLines(model: PostingModel, row: InputRow, opts: GenerateOpt
   const numDiario = opts.startNumDiario + rowIndex
   const numDoc = makeNumDoc(numDiario, opts.documento)
   const dateStr = ddmm(row.date)
+  const yearStr = toYearString(opts.ano)
   const desc = stripAccents(row.description)
   const amtNum = Math.abs(row.amount)
   const amt = toAmountString(amtNum)
@@ -71,6 +76,7 @@ function buildPostingLines(model: PostingModel, row: InputRow, opts: GenerateOpt
   creditLine = setRange(creditLine, f.descStart, f.descLen, desc)
   creditLine = setRightAlignedFieldEndingAt(creditLine, f.amountEnd, f.amountFieldLen, amt)
   creditLine = creditLine.substring(0, f.dcPos) + 'C' + creditLine.substring(f.dcPos + 1)
+  creditLine = setRange(creditLine, f.yearStart, f.yearLen, yearStr)
 
   // debit line
   let debitLine = model.debitTemplate
@@ -81,12 +87,13 @@ function buildPostingLines(model: PostingModel, row: InputRow, opts: GenerateOpt
   debitLine = setRange(debitLine, f.descStart, f.descLen, desc)
   debitLine = setRightAlignedFieldEndingAt(debitLine, f.amountEnd, f.amountFieldLen, amt)
   debitLine = debitLine.substring(0, f.dcPos) + 'D' + debitLine.substring(f.dcPos + 1)
+  debitLine = setRange(debitLine, f.yearStart, f.yearLen, yearStr)
 
   return {
     rowIndex,
     numDiario,
     numDoc,
-    dateISO: toIsoDate(row.date),
+    dateISO: toPostingIsoDate(row.date, opts.ano),
     description: row.description,
     amount: amtNum,
     creditLine,
