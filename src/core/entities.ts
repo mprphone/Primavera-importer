@@ -1,3 +1,4 @@
+import { getServerStore, setServerStore } from './server-store'
 import { normalizeForMatch } from './utils'
 
 export type EntityType = 'supplier' | 'customer'
@@ -6,17 +7,28 @@ export type Entity = {
   code: string
   name: string
   nif?: string
+  account?: string
   keywords?: string
   type: EntityType
 }
 
 export type EntitySourceMode = 'local' | 'api'
 
-const LS_KEY = 'primavera_importer_entities_v1'
+function storageKey(clientId: string) {
+  return `primavera_importer_entities_v2_${clientId}`
+}
 
-export function loadLocalEntities(): Entity[] {
+export function loadLocalEntities(clientId: string): Entity[] {
   try {
-    const raw = localStorage.getItem(LS_KEY)
+    const raw = localStorage.getItem(storageKey(clientId))
+    if (!raw && clientId === 'vilarinho') {
+      const legacy = localStorage.getItem('primavera_importer_entities_v1')
+      if (legacy) {
+        const entities = JSON.parse(legacy) as Entity[]
+        saveLocalEntities(clientId, entities)
+        return entities
+      }
+    }
     if (!raw) return []
     return JSON.parse(raw) as Entity[]
   } catch {
@@ -24,8 +36,22 @@ export function loadLocalEntities(): Entity[] {
   }
 }
 
-export function saveLocalEntities(entities: Entity[]) {
-  localStorage.setItem(LS_KEY, JSON.stringify(entities))
+export function saveLocalEntities(clientId: string, entities: Entity[]) {
+  try {
+    localStorage.setItem(storageKey(clientId), JSON.stringify(entities))
+    setServerStore(clientId, 'entities', entities)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function refreshLocalEntitiesFromServer(clientId: string): Promise<Entity[] | null> {
+  if (loadLocalEntities(clientId).length > 0) return null
+  const remote = await getServerStore<Entity[]>(clientId, 'entities')
+  if (!remote || !remote.length) return null
+  saveLocalEntities(clientId, remote)
+  return remote
 }
 
 export function suggestEntity(description: string, entities: Entity[]): { entity?: Entity; score: number } {

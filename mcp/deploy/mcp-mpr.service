@@ -1,0 +1,17 @@
+[Unit]
+Description=MCP Server — mcp.mpr.pt (liga o claude.ai às apps do Marco)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/programas/primavera-importer/mcp
+EnvironmentFile=/home/ubuntu/programas/primavera-importer/mcp/.env
+ExecStart=/usr/bin/node /home/ubuntu/programas/primavera-importer/mcp/server.mjs
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

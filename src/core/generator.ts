@@ -13,6 +13,8 @@ export type GenerateOptions = {
   diario: string
   documento: string
   startNumDiario: number
+  creditAccount?: string
+  debitAccount?: string
 }
 
 export type PostingLinePreview = {
@@ -70,7 +72,7 @@ function buildPostingLines(model: PostingModel, row: InputRow, opts: GenerateOpt
   // credit line
   let creditLine = model.creditTemplate
   creditLine = setRange(creditLine, f.dateStart, f.dateLen, dateStr)
-  creditLine = setRange(creditLine, f.accountStart, f.accountLen, (model.creditAccountFixed ?? '').trim())
+  creditLine = setRange(creditLine, f.accountStart, f.accountLen, (opts.creditAccount ?? model.creditAccountFixed ?? '').trim())
   creditLine = setRange(creditLine, f.diarioStart, f.diarioLen, opts.diario)
   creditLine = setRange(creditLine, f.numDocStart, f.numDocLen, numDoc)
   creditLine = setRange(creditLine, f.descStart, f.descLen, desc)
@@ -81,7 +83,7 @@ function buildPostingLines(model: PostingModel, row: InputRow, opts: GenerateOpt
   // debit line
   let debitLine = model.debitTemplate
   debitLine = setRange(debitLine, f.dateStart, f.dateLen, dateStr)
-  debitLine = setRange(debitLine, f.accountStart, f.accountLen, (model.debitAccountFixed ?? '').trim())
+  debitLine = setRange(debitLine, f.accountStart, f.accountLen, (opts.debitAccount ?? model.debitAccountFixed ?? '').trim())
   debitLine = setRange(debitLine, f.diarioStart, f.diarioLen, opts.diario)
   debitLine = setRange(debitLine, f.numDocStart, f.numDocLen, numDoc)
   debitLine = setRange(debitLine, f.descStart, f.descLen, desc)
@@ -112,13 +114,13 @@ export function buildPostingPreview(model: PostingModel, rows: InputRow[], opts:
       dateISO: built.dateISO,
       description: built.description,
       credit: {
-        account: (model.creditAccountFixed ?? '').trim(),
+        account: (opts.creditAccount ?? model.creditAccountFixed ?? '').trim(),
         dc: 'C',
         amount: built.amount,
         raw: built.creditLine,
       },
       debit: {
-        account: (model.debitAccountFixed ?? '').trim(),
+        account: (opts.debitAccount ?? model.debitAccountFixed ?? '').trim(),
         dc: 'D',
         amount: built.amount,
         raw: built.debitLine,

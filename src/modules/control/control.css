@@ -1,0 +1,241 @@
+.control-page {
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.control-overview {
+  display: grid;
+  gap: 16px;
+  padding: 18px 20px;
+}
+
+.control-stats {
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+}
+
+.purchase-stat-icon.missing {
+  color: #7b3434;
+  background: #f8dada;
+}
+
+.control-empty-panel {
+  padding: 20px;
+}
+
+.control-empty-list {
+  padding: 18px 20px;
+}
+
+.table-wrap.control-table-wrap {
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.control-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.control-table th,
+.control-table td {
+  padding: 10px 14px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.control-table .number {
+  text-align: right;
+}
+
+.control-row {
+  cursor: pointer;
+}
+
+.module-modal.control-validation-modal {
+  width: min(720px, calc(100vw - 40px));
+}
+
+.control-modal-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.control-modal-summary .control-status-box.possible {
+  border-color: #f0e2b3;
+  background: #fdf8e9;
+}
+
+.control-modal-summary .control-status-box.possible.low-confidence {
+  border-color: #f0c896;
+  background: #fdf1e3;
+}
+
+.control-modal-summary .control-status-box.possible.amount-difference {
+  border-color: #e9a85f;
+  background: var(--orange-100);
+}
+
+.control-modal-summary .control-status-box.possible.direct-bank {
+  border-color: #e9a85f;
+  background: var(--orange-100);
+}
+
+.control-modal-summary .control-status-box.missing {
+  border-color: #f0cccc;
+  background: #fbeeee;
+}
+
+.control-modal-summary .control-status-box.confirmed {
+  border-color: #cfe4d3;
+  background: #f2f9f0;
+}
+
+.control-no-posting-note {
+  margin: 0 0 10px;
+}
+
+.control-posting-meta {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.manual-review-trail {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f2f9f0;
+  color: #245239;
+  font-size: 13px;
+}
+
+.manual-review-trail small {
+  color: var(--ink-soft);
+}
+
+.sql-verification-summary .control-bulk-open {
+  margin-left: auto;
+  color: #fff;
+  border-color: var(--action-blue-deep);
+  background: var(--action-blue-deep);
+}
+
+.sql-verification-summary .control-bulk-open::before {
+  display: none;
+}
+
+.sql-verification-summary .control-bulk-open:hover:not(:disabled) {
+  color: #fff;
+  border-color: #103858;
+  background: #103f68;
+}
+
+.control-bulk-open .purchase-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.control-bulk-message {
+  margin: 10px 14px;
+}
+
+.module-modal.control-bulk-validation-modal {
+  width: min(660px, calc(100vw - 40px));
+}
+
+.control-bulk-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, .4fr)) minmax(220px, 1.2fr);
+  gap: 8px;
+  margin: 16px 0 12px;
+}
+
+.control-bulk-summary > span {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  min-height: 66px;
+  padding: 10px 12px;
+  border: 1px solid #f0e2b3;
+  border-radius: 10px;
+  background: #fdf8e9;
+}
+
+.control-bulk-summary > span.missing {
+  border-color: #f0cccc;
+  background: #fbeeee;
+}
+
+.control-bulk-summary > span.scope {
+  border-color: var(--action-blue-border);
+  background: var(--action-blue-soft);
+}
+
+.control-bulk-summary strong {
+  font-size: 17px;
+}
+
+.control-bulk-summary small {
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.control-bulk-warning {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-left: 3px solid #d39a35;
+  color: #6f5520;
+  background: #fff8dc;
+  font-size: 12px;
+}
+
+.control-bulk-justification {
+  gap: 6px;
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.control-bulk-justification textarea {
+  min-height: 90px;
+  font-family: inherit;
+  font-weight: 400;
+}
+
+.control-bulk-justification small {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.control-bulk-confirm {
+  color: #fff;
+  border-color: var(--action-blue-deep);
+  background: var(--action-blue-deep);
+}
+
+.control-bulk-confirm:hover:not(:disabled) {
+  color: #fff;
+  border-color: #103858;
+  background: #103f68;
+}
+
+@media (max-width: 680px) {
+  .sql-verification-summary .control-bulk-open {
+    margin-left: 0;
+  }
+
+  .control-bulk-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .control-bulk-summary > span.scope {
+    grid-column: 1 / -1;
+  }
+}

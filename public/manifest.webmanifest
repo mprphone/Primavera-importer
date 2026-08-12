@@ -1,0 +1,28 @@
+{
+  "id": "/",
+  "name": "ERP Evolution — Contabilidade Inteligente",
+  "short_name": "ERP Evolution",
+  "description": "Importação, reconciliação e apoio inteligente à contabilidade no ERP Evolution.",
+  "lang": "pt-PT",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#e9f2f0",
+  "theme_color": "#243a55",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

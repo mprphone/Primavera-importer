@@ -1,0 +1,94 @@
+Extensão local do ERP Evolution Importer
+=====================================
+
+Esta extensão liga o teu PC (onde está o SQL Server do ERP Evolution) à API
+central em pri.mpr.pt, para a sincronização de contabilidade e
+clientes/fornecedores funcionar a partir do browser.
+
+IMPORTANTE: uma instalação serve TODAS as empresas cujas bases de dados
+estejam no mesmo SQL Server que este PC alcança. Só precisas de fazer
+esta instalação uma vez por PC/SQL Server — não uma vez por empresa.
+Se já correste isto noutra empresa do mesmo escritório, usa o MESMO
+token em vez de gerares um novo.
+
+O que precisas de antemão
+--------------------------
+- O token desta ligação: em Configurações de qualquer empresa deste
+  SQL Server, clica em "Gerar nova ligação" (só da primeira vez) e
+  depois em "Copiar token". As outras empresas do mesmo SQL Server só
+  precisam de colar esse mesmo token no campo "Token da extensão".
+- Acesso de leitura ao SQL Server do ERP Evolution a partir deste PC — se
+  ainda não foi configurado, vê "Configurar o acesso à base de dados"
+  mais abaixo.
+- Não precisas de instalar Node.js à mão: o instalador faz isso por ti.
+
+Instalação (forma simples)
+---------------------------
+1. Extrai este .zip para uma pasta no PC.
+2. Dentro da pasta extraída, clica duas vezes em INSTALAR.bat.
+3. Quando pedir, cola o token (copiado em Configurações, como acima) e
+   prime Enter.
+4. Aguarda — na primeira vez instala o Node.js (se faltar) e as
+   dependências, o que pode demorar alguns minutos.
+5. Quando aparecer "Extensão ligada com sucesso", está pronto. Podes
+   fechar a janela do instalador.
+
+O instalador copia a extensão para o teu perfil do Windows e configura-a
+para arrancar automaticamente, em segundo plano, sempre que entrares no
+Windows. Não precisas de abrir nenhum programa nem de deixar uma janela
+visível.
+
+Atualizar uma instalação existente
+-----------------------------------
+Se a aplicação indicar que a extensão está desatualizada:
+1. Descarrega novamente a extensão nas Configurações.
+2. Extrai o novo .zip para uma pasta.
+3. Corre novamente INSTALAR.bat com o mesmo token.
+
+O instalador substitui a versão anterior e reinicia-a em segundo plano.
+
+Instalação (forma manual, se preferires)
+------------------------------------------
+1. Abre o PowerShell dentro da pasta extraída.
+2. Desbloqueia os ficheiros (vieram da internet):
+
+     Get-ChildItem -Recurse | Unblock-File
+
+3. Corre o script de arranque, substituindo TOKEN:
+
+     .\windows\Start-PrimaveraExtension.ps1 -Token TOKEN -Provider sql
+
+Este arranque manual mostra uma janela e destina-se apenas a diagnóstico.
+Para instalar o arranque automático e oculto, usa sempre INSTALAR.bat.
+
+Configurar o acesso à base de dados (uma vez só, por SQL Server)
+----------------------------------------------------------------
+A extensão liga-se ao SQL Server com a conta Windows do PC, em modo
+só-leitura. Se ainda não tiver acesso configurado, alguém com permissões
+de administrador no SQL Server tem de correr o script
+"sql\Configurar-Acesso-Leitura.sql" (no SQL Server Management Studio)
+para cada base de dados/empresa, depois de o editar com:
+  - o nome da base de dados dessa empresa (NomeBaseDados)
+  - a conta Windows que vai correr a extensão (DOMINIO\Utilizador)
+
+Confirmar que está a funcionar
+-------------------------------
+Em Configurações > Sincronização SQL de qualquer empresa desse SQL Server
+(com o mesmo token colado), clica em "Testar SQL". Os botões "Sincronizar
+contabilidade" e "Sincronizar clientes/fornecedores" também já devem
+funcionar.
+
+Se for necessário consultar o diagnóstico, o registo fica em:
+
+  %LOCALAPPDATA%\ERP Evolution Importer\Extension\extension.log
+
+Problemas?
+----------
+- "A extensão local não está ligada" ou "ainda não tem um token
+  configurado": confirma que colaste o token certo nas Configurações
+  desta empresa e volta a correr INSTALAR.bat com esse token.
+- Token inválido: confirma que copiaste o token completo, sem espaços.
+- Erro de SQL/permissões: confirma que o script
+  "Configurar-Acesso-Leitura.sql" foi corrido para a base de dados
+  desta empresa específica.
+- Qualquer outro erro: contacta o administrador com o texto do erro.

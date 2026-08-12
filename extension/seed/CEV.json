@@ -1,0 +1,18 @@
+{
+  "accounts": [
+    { "code": "1201", "description": "Depósitos à ordem", "active": true },
+    { "code": "1290", "description": "Transferências internas", "active": true },
+    { "code": "221110001", "description": "Fornecedores gerais", "active": true }
+  ],
+  "customers": [
+    { "code": "C001", "name": "Cliente de demonstração", "nif": "999999990", "keywords": "CLIENTE DEMO" }
+  ],
+  "suppliers": [
+    { "code": "F001", "name": "Banco Santander Totta SA", "nif": "500844321", "keywords": "SANTANDER|TOTTA" }
+  ],
+  "vatRates": [
+    { "code": "NOR", "description": "Taxa normal", "rate": 23 },
+    { "code": "INT", "description": "Taxa intermédia", "rate": 13 },
+    { "code": "RED", "description": "Taxa reduzida", "rate": 6 }
+  ]
+}

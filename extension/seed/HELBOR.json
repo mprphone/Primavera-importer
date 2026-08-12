@@ -1,0 +1,10 @@
+{
+  "accounts": [],
+  "customers": [],
+  "suppliers": [],
+  "vatRates": [
+    { "code": "NOR", "description": "Taxa normal", "rate": 23 },
+    { "code": "INT", "description": "Taxa intermédia", "rate": 13 },
+    { "code": "RED", "description": "Taxa reduzida", "rate": 6 }
+  ]
+}
