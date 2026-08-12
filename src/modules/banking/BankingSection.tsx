@@ -31,7 +31,7 @@ export function BankingSection({ clientId, accounts, ...rest }: Props) {
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7))
 
   return (
-    <section className="module-page banking-page">
+    <section className={`module-page banking-page${subTab === 'reconciliation' ? ' banking-reconciliation-page' : ''}`}>
       <nav className="banking-subtabs" aria-label="Secção de bancos">
         <button className={subTab === 'reconciliation' ? 'active' : ''} onClick={() => setSubTab('reconciliation')}>Reconciliação</button>
         <button className={subTab === 'postings' ? 'active' : ''} onClick={() => setSubTab('postings')}>Lançamento</button>

@@ -152,7 +152,9 @@ export async function refreshCustomClientsFromServer(): Promise<ClientProfile[] 
 }
 
 export function getAllClientProfiles(): ClientProfile[] {
-  return [...ClientProfiles, ...loadCustomClients()]
+  // Uma empresa configurada de origem pode ser editada. Nesse caso, a versão guardada em
+  // "custom" substitui visualmente a base com o mesmo id, sem mudar as chaves dos seus dados.
+  return mergeClientsById(ClientProfiles, loadCustomClients())
 }
 
 export function getClientProfile(clientId: string): ClientProfile | undefined {
@@ -180,7 +182,15 @@ export async function addCustomClient(profile: ClientProfile): Promise<void> {
   // perder empresas adicionadas entretanto noutro PC.
   const remote = await getServerStore<ClientProfile[]>(GLOBAL_STORE_COMPANY, CUSTOM_CLIENTS_STORE_KEY)
   const base = mergeClientsById(loadCustomClients(), remote ?? [])
-  saveCustomClients([...base, profile])
+  saveCustomClients(mergeClientsById(base, [profile]))
+}
+
+export async function updateClientProfile(profile: ClientProfile): Promise<void> {
+  // Mantém sempre o id recebido: mudar nome/NIF/código ERP nunca pode criar outra área de
+  // dados nem desligar compras, reconciliações e configurações já existentes.
+  const remote = await getServerStore<ClientProfile[]>(GLOBAL_STORE_COMPANY, CUSTOM_CLIENTS_STORE_KEY)
+  const base = mergeClientsById(loadCustomClients(), remote ?? [])
+  saveCustomClients(mergeClientsById(base, [profile]))
 }
 
 export async function removeCustomClient(clientId: string): Promise<void> {

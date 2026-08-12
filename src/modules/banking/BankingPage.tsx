@@ -19,8 +19,10 @@ function sumAmount(movements: BankMovement[]) {
   return movements.reduce((total, item) => total + item.amount, 0)
 }
 
+const euroNumber = new Intl.NumberFormat('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
 function formatEuro(value: number) {
-  return `${value.toFixed(2)} €`
+  return `${euroNumber.format(value)} €`
 }
 
 type Props = {
@@ -123,6 +125,12 @@ export function BankingPage({
     || (item.status === 'reconciled' && item.date >= periodFrom && item.date <= periodTo)
   )
   const difference = selectionDifference(displayMovements, Array.from(selectedBank), Array.from(selectedAccounting))
+  const selectedBankTotal = displayMovements
+    .filter(item => selectedBank.has(item.id))
+    .reduce((sum, item) => sum + Math.abs(item.amount), 0)
+  const selectedAccountingTotal = displayMovements
+    .filter(item => selectedAccounting.has(item.id))
+    .reduce((sum, item) => sum + Math.abs(item.amount), 0)
   const intelligentMatches = useMemo(() => findAdvancedMatches(displayMovements, tolerance), [displayMovements, tolerance])
   const groupMatches = useMemo(() => findGroupMatches(displayMovements, tolerance), [displayMovements, tolerance])
   const anomalies = useMemo(() => detectMovementAnomalies(displayMovements), [displayMovements])
@@ -448,12 +456,17 @@ export function BankingPage({
             {accountOptions.map(item => <option key={item.code} value={item.code}>{item.code} — {item.description}</option>)}
           </select>
         </label>
-        <label className="bank-month-field">Mês
-          <input type="month" value={month} onChange={event => onMonthChange(event.target.value)} />
-        </label>
-        <label className="bank-tolerance-field">Tolerância de datas
-          <input type="number" min="0" max="31" value={tolerance} onChange={event => setTolerance(Number(event.target.value))} />
-        </label>
+        <div className="bank-period-settings" aria-label="Período da reconciliação">
+          <label className="bank-month-field">Mês a reconciliar
+            <input type="month" value={month} onChange={event => onMonthChange(event.target.value)} />
+          </label>
+          <label className="bank-tolerance-field">Diferença máxima
+            <span className="bank-tolerance-control">
+              <input type="number" min="0" max="31" value={tolerance} onChange={event => setTolerance(Number(event.target.value))} />
+              <span>dias</span>
+            </span>
+          </label>
+        </div>
         <button className="bank-import-button" onClick={fetchLedger} disabled={!account || fetchingLedger}>
           {fetchingLedger ? 'A ler razão…' : 'Importar razão'}
         </button>
@@ -590,10 +603,12 @@ export function BankingPage({
       </div>
 
       <div className="match-bar">
-        <span>Banco: <b>{selectedBank.size}</b></span>
-        <span>Contabilidade: <b>{selectedAccounting.size}</b></span>
-        <span>Diferença: <b className={Math.abs(difference) < 0.01 ? 'balanced' : 'unbalanced'}>{difference.toFixed(2)} €</b></span>
-        <button onClick={confirmManual} disabled={!selectedBank.size || !selectedAccounting.size}>Confirmar reconciliação</button>
+        <div className="match-selection-summary">
+          <span><small>Banco</small><b>{selectedBank.size} mov. · {formatEuro(selectedBankTotal)}</b></span>
+          <span><small>Contabilidade</small><b>{selectedAccounting.size} mov. · {formatEuro(selectedAccountingTotal)}</b></span>
+          <span><small>Diferença</small><b className={Math.abs(difference) < 0.01 ? 'balanced' : 'unbalanced'}>{formatEuro(difference)}</b></span>
+        </div>
+        <button onClick={confirmManual} disabled={!selectedBank.size || !selectedAccounting.size}>Reconciliar seleção</button>
       </div>
 
       {viewingMatch && (
